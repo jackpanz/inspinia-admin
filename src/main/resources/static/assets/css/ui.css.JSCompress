@@ -1,0 +1,9 @@
+﻿<jscompress public="http://www.jscompress.cn/" command="import-combineset">
+<combinefile path="ui.css">
+    <css_fixedrelativeurl value="0" />
+    <auto value="0" />
+    <sourcefile path=".\font-awesome.css" />
+    <sourcefile path=".\animate.css" />
+    <sourcefile path=".\bootstrap-datetimepicker.css" />
+</combinefile>
+</jscompress>
