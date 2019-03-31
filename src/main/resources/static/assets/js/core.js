@@ -1,5 +1,5 @@
 /*
- *  v 1.1.6
+ *  v 1.0.18
  */
 
 $.data( document , "defaultLanguage", {
@@ -90,10 +90,10 @@ function createSearch(options) {
 
         searchDiv +=
             '<div style="display:' + data.display + '" class="' + data.layoutClass + " " + data.displayCss + '">' +
-                '<div class="input-group">' +
-                    '<span class="input-group-btn">' +
-                    '<span class="search-text">' + data.title + '</span></span>' + str +
-                '</div>' +
+            '<div class="input-group">' +
+            '<span class="input-group-btn">' +
+            '<span class="search-text">' + data.title + '</span></span>' + str +
+            '</div>' +
             '</div>';
     });
     $(options.searchTag.tag).append(searchDiv +'</div>');
@@ -204,7 +204,7 @@ function dataTable(options) {
     }, options);
 
     if( settings.stateSave ){
-       var paramsCache = localStorage.getItem("paramsCache_" + document.location.pathname,paramsCache);
+        var paramsCache = localStorage.getItem("paramsCache_" + document.location.pathname,paramsCache);
         setSearch( paramsCache , options.searchTag );
     } else {
         localStorage.removeItem("paramsCache_" + document.location.pathname);
@@ -345,6 +345,7 @@ function loadForm(form,data) {
                 height: null,
                 disabled: false,
                 readonly: false,
+                showRemove: false,
                 aspectRatio:1,
                 disabledTxt: el.disabled ?'disabled':'',
                 readonlyTxt: el.readonly ?'readonly':'',
@@ -868,15 +869,30 @@ function loadForm(form,data) {
                 el.height = "400px";
             }
             var html = '<img style="width: 100%;height:'+el.height+'" id="' + el.id +'_img" ><div style="height: 10px"></div><input type="file" name="'+el.id+'" id="'+el.id+'" '+ el.disabledTxt + ' /> ' +
+                '<input type="hidden" id="' + el.id +'_remove" name="' + el.id +'_remove"  />' +
                 '<input type="hidden" id="' + el.id +'_x" name="' + el.id +'_x"/>' +
                 '<input type="hidden" id="' + el.id +'_y" name="' + el.id +'_y"/>' +
                 '<input type="hidden" id="' + el.id +'_w" name="' + el.id +'_w"/>' +
                 '<input type="hidden" id="' + el.id +'_h" name="' + el.id +'_h"/>';
             el.loadForm.writeOuterFrame(el, html);
             $("#" + el.id ).fileinput({
+                layoutTemplates: {
+                    main1: "{preview}\n" +
+                        "<div class=\'input-group {class}\'>\n" +
+                        "   {caption}\n" +
+                        "   <div class=\'input-group-btn\ input-group-prepend'>\n" +
+                        " <button type=\"button\" id=\"" + el.id + "_remove_button\" style=\"display: " + ( el.showRemove ? "inline":"none" ) + "\" tabindex=\"500\" onclick=\"clearCropper('" + el.id + "')\" class=\"btn btn-danger\"><i class=\"glyphicon glyphicon-trash\"></i>&nbsp;<span class=\"hidden-xs\">Delete</span></button>" +
+                        "       {remove}\n" +
+                        "       {upload}\n" +
+                        "       {browse}\n" +
+                        "   </div>\n" +
+                        "</div>"
+                },
                 language: 'zh', //设置语言
                 maxFileSize: 10240,//文件最大容量
-                uploadExtraData: data,//上传时除了文件以外的其他额外数据
+                uploadExtraData: function (previewId, index) {
+
+                },//上传时除了文件以外的其他额外数据
                 showPreview: false,//隐藏预览
                 uploadAsync: true,//ajax同步
                 dropZoneEnabled: true,//是否显示拖拽区域
@@ -889,12 +905,14 @@ function loadForm(form,data) {
             });
 
             var image = document.getElementById(el.id+"_img");
+
             el.cropper = new Cropper(image, {
                 viewMode:1,
                 aspectRatio: el.aspectRatio,
                 zoomable:false,
                 autoCrop: false, //关闭自动显示裁剪框
                 crop : function(event) {
+                    /*
                     console.log(event.detail.x);
                     console.log(event.detail.y);
                     console.log(event.detail.width);
@@ -902,6 +920,7 @@ function loadForm(form,data) {
                     console.log(event.detail.rotate);
                     console.log(event.detail.scaleX);
                     console.log(event.detail.scaleY);
+                    */
                     $("#" + this.id + "_x").val(event.detail.x);
                     $("#" + this.id + "_y").val(event.detail.y);
                     $("#" + this.id + "_w").val(event.detail.width);
@@ -913,6 +932,15 @@ function loadForm(form,data) {
                     }else{
                         this.cropper.reset().crop();
                     }
+                    // $("#" + this.id + "_max").removeClass("hide");
+                    // $("#" + this.id + "_max").click(function() {
+                    //     this.cropper.setCropBoxData({
+                    //         "width":530.1333333333333,
+                    //         "height":298.2,
+                    //         "left":145.3733357747396,
+                    //         "top":105.79999389648438,
+                    //     });
+                    // }.bind(this));
                     if(this.hidden){
                         if( this && !$("#" + this.uid).hasClass("hide") ){
                             $("#" + this.uid).addClass("hide");
@@ -921,6 +949,8 @@ function loadForm(form,data) {
                 }.bind(el),
             });
 
+            $.data( image , "cropper" , el.cropper );
+
             $("#" + el.id ).on('change',function () {
                 var img = $("#" + this.id + "_img" );
                 var input = $("#" + this.id );
@@ -928,6 +958,7 @@ function loadForm(form,data) {
                     var reader = new FileReader();
                     reader.readAsDataURL(input[0].files[0]);
                     reader.onload = function (e) {
+                        $("#" + this.id + "_remove").attr("value","");
                         img.removeAttr('src');
                         img.attr('src', e.target.result);
                         if( this.cropper ){
@@ -1063,15 +1094,15 @@ function loadForm(form,data) {
             // <p class="form-control-static">email@example.com</p>
             var html = '<p id="' + el.id + '" name="' + el.name + '" class="form-control-static" style="border-bottom:1px solid #e5e6e7;padding: 6px 12px;">' + ( el.placeholder || el.title ) + '</p>';
             if(el.button0 || el.button1) {
-                    var button0 = "";
-                    var button1 = "";
-                    if(el.button0){
-                        button0 = '<span class=\"input-group-btn\" style=\"vertical-align: bottom;\"><button type=\"button\" id="'+el.id+'_button0" class=\"btn btn-primary\" >'+el.button0+'</button></span>';
-                    }
-                    if(el.button1){
-                        button1 = '<span class=\"input-group-btn\" style=\"vertical-align: bottom;\"><button type=\"button\" id="'+el.id+'_button1" class=\"btn btn-primary\" >'+el.button1+'</button></span>';
-                    }
-                    html ='<div class="input-group">' + button0 + html + button1 +'</div>';
+                var button0 = "";
+                var button1 = "";
+                if(el.button0){
+                    button0 = '<span class=\"input-group-btn\" style=\"vertical-align: bottom;\"><button type=\"button\" id="'+el.id+'_button0" class=\"btn btn-primary\" >'+el.button0+'</button></span>';
+                }
+                if(el.button1){
+                    button1 = '<span class=\"input-group-btn\" style=\"vertical-align: bottom;\"><button type=\"button\" id="'+el.id+'_button1" class=\"btn btn-primary\" >'+el.button1+'</button></span>';
+                }
+                html ='<div class="input-group">' + button0 + html + button1 +'</div>';
 
             }
             el.loadForm.writeOuterFrame(el, html);
@@ -1121,6 +1152,17 @@ function loadForm(form,data) {
     this.renderAll();
     this.initializedForm();
     return this;
+}
+
+function clearCropper(id) {
+    try {
+        $("#" + id).fileinput('clear');
+        var cropper = $.data($("#" + id + "_img").get(0), "cropper");
+        cropper.reset().clear();
+        cropper.reset().disable();
+        $("#" + id + "_img").parent().find(".cropper-hide").css("display", "none");
+        $("#" + id + "_remove").attr("value","true");
+    }catch (e) {}
 }
 
 jQuery(function () {
