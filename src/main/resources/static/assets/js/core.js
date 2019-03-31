@@ -836,7 +836,7 @@ function loadForm(form,data) {
         this.setRows = function(){};
         this.render = function (el) {
             var html =
-                '<input id="' + el.id + '_remove" name="' +  el.name + '_remove" type="hidden" value="false" >' +
+                '<input id="' + el.id + '_remove" name="' +  el.name + '_remove" type="hidden" value="" >' +
                 '<input id="' + el.id + '" name="' +  el.name + '" type="file" '+el.multiple+' '+ el.disabledTxt + ' >';
             el.loadForm.writeOuterFrame(el, html);
             this.initFileinput(el);
@@ -859,9 +859,9 @@ function loadForm(form,data) {
                         downloadUrl: src, // override url
                         filename: filetype // override download filename
                     }];
-                    $("#" + el.id ).fileinput('destroy');
-                    this.initFileinput(el,initialPreview,initialPreviewConfig);
                 }
+                $("#" + el.id ).fileinput('destroy');
+                this.initFileinput(el,initialPreview,initialPreviewConfig);
             }
         };
         return this;
