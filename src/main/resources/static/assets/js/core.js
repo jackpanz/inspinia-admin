@@ -1,5 +1,5 @@
 /*
- *  v 1.0.19
+ *  v 1.0.20
  */
 
 $.data( document , "defaultLanguage", {
@@ -801,7 +801,10 @@ function loadForm(form,data) {
     };
 
 
-    var videoType = ["mp4", "m2v", "mkv","mp3"];
+    var audioType = /(ogg|mp3|mp?g|wav)$/i;
+    var videoType = /(ogg|mp4|mp?g|mov|webm|3gp)$/i;
+    var imageType = /\.(gif|png|jpe?g)$/i;
+
 
     //file
     var _filephoto = function () {
@@ -829,7 +832,7 @@ function loadForm(form,data) {
             }).on('fileselect', function(event, numFiles, label) {
                 $("#" + $(this).attr("id") + "_remove").attr("value","");
             }).on('fileselectnone', function(event) {
-                $("#" + $(this).attr("id") + "_remove").attr("value","true");
+                setRemoveTrue($(this).attr("id"));
             });
 
         }
@@ -846,18 +849,23 @@ function loadForm(form,data) {
             var initialPreview;
             var initialPreviewConfig;
             if( src && src != "" ){
-                var filetype = src.replace(/^.+\./,'').toLowerCase();
                 initialPreview = [src];
-                if( videoType.indexOf(filetype) > -1 ){
+                var filetype = src.replace(/^.+\./,'').toLowerCase();
+                if( src.match(audioType) ){
                     initialPreviewConfig = [{
-                        type: "video",
-                        size: 0,
-                        filetype: "video/mp4",
-                        caption: filetype,
-                        // url: "/file-upload-batch/2",
-                        // key: 3,
-                        downloadUrl: src, // override url
-                        filename: filetype // override download filename
+                        type: "audio", size: 0, filetype: "audio/"+filetype, caption: filetype, filename: filetype , downloadUrl:true
+                    }];
+                } else if( src.match(videoType) ){
+                    initialPreviewConfig = [{
+                        type: "video", size: 0, filetype: "video/"+filetype, caption: filetype, filename: filetype ,downloadUrl:true
+                    }];
+                } else if( src.match(imageType) ){
+                    initialPreviewConfig = [{
+                        type: "image", size: 0, caption: filetype, filename: filetype , downloadUrl:true
+                    }];
+                } else {
+                    initialPreviewConfig = [{
+                        type: "other", size: 0, caption: filetype, filename: filetype , downloadUrl:true
                     }];
                 }
                 $("#" + el.id ).fileinput('destroy');
@@ -886,7 +894,7 @@ function loadForm(form,data) {
                         "<div class=\'input-group {class}\'>\n" +
                         "   {caption}\n" +
                         "   <div class=\'input-group-btn\ input-group-prepend'>\n" +
-                        " <button type=\"button\" id=\"" + el.id + "_remove_button\" style=\"display: " + ( el.showRemove ? "inline":"none" ) + "\" tabindex=\"500\" onclick=\"clearCropper('" + el.id + "')\" class=\"btn btn-danger\"><i class=\"glyphicon glyphicon-trash\"></i>&nbsp;<span class=\"hidden-xs\">"+( el.button0 ? el.button0:"移除" )+"</span></button>" +
+                        " <button type=\"button\" id=\"" + el.id + "_remove_button\" style=\"display: " + ( el.showRemove ? "inline":"none" ) + "\" tabindex=\"500\" onclick=\"clearFileinput('" + el.id + "');clearCropper('" + el.id + "')\" class=\"btn btn-danger\"><i class=\"glyphicon glyphicon-trash\"></i>&nbsp;<span class=\"hidden-xs\">"+( el.button0 ? el.button0:"移除" )+"</span></button>" +
                         "       {remove}\n" +
                         "       {upload}\n" +
                         "       {browse}\n" +
@@ -904,7 +912,6 @@ function loadForm(form,data) {
             }).on('fileselect', function(event, numFiles, label) {
                 $("#" + $(this).attr("id") + "_remove").attr("value","");
             }).on('fileselectnone', function(event) {
-                $("#" + $(this).attr("id") + "_remove").attr("value","true");
                 clearCropper($(this).attr("id"));
             });
 
@@ -1157,19 +1164,25 @@ function loadForm(form,data) {
     return this;
 }
 
+function setRemoveTrue(id) {
+    var $remove_button = $("#" + id + "_remove_button" );
+    if( $remove_button.length > 0 && $remove_button.attr("display") !== "none" ){
+        $("#" + id + "_remove").attr("value","true");
+    }
+}
+
 function clearFileinput(id) {
     $("#" + id).fileinput('clear');
-    $("#" + id + "_remove").attr("value","true");
+    setRemoveTrue(id);
 }
 
 function clearCropper(id) {
     try {
-        $("#" + id).fileinput('clear');
         var cropper = $.data($("#" + id + "_img").get(0), "cropper");
         cropper.reset().clear();
         cropper.reset().disable();
         $("#" + id + "_img").parent().find(".cropper-hide").css("display", "none");
-        $("#" + id + "_remove").attr("value","true");
+        setRemoveTrue(id);
     }catch (e) {}
 }
 
