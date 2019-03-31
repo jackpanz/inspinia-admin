@@ -1,5 +1,5 @@
 /*
- *  v 1.0.18
+ *  v 1.0.19
  */
 
 $.data( document , "defaultLanguage", {
@@ -805,33 +805,41 @@ function loadForm(form,data) {
 
     //file
     var _filephoto = function () {
-
-        this.setRows = function(){};
-        this.render = function (el) {
-            var html = '<input id="' + el.id + '_isDelete" name="' +  el.name + '_isDelete" type="hidden" value="false" ><input id="' + el.id + '" name="' +  el.name + '" type="file" '+el.multiple+' '+ el.disabledTxt + ' >';
-            el.loadForm.writeOuterFrame(el, html);
+        this.initFileinput = function (el,initialPreview,initialPreviewConfig) {
             $("#" + el.id ).fileinput({
-                clearListen:function (fileinput) {
-                    $("#"+fileinput.uploadFileAttr+"_isDelete").val("true");
+                layoutTemplates: {
+                    main1: "{preview}\n" +
+                        "<div class=\'input-group {class}\'>\n" +
+                        "   {caption}\n" +
+                        "   <div class=\'input-group-btn\ input-group-prepend'>\n" +
+                        " <button type=\"button\" id=\"" + el.id + "_remove_button\" style=\"display: " + ( el.showRemove ? "inline":"none" ) + "\" tabindex=\"500\" onclick=\"clearFileinput('" + el.id + "')\" class=\"btn btn-danger\"><i class=\"glyphicon glyphicon-trash\"></i>&nbsp;<span class=\"hidden-xs\">"+( el.button0 ? el.button0:"移除" )+"</span></button>" +
+                        "       {remove}\n" +
+                        "       {upload}\n" +
+                        "       {browse}\n" +
+                        "   </div>\n" +
+                        "</div>",
+                    actionDelete:"",
                 },
-                addToStackListen:function (fileinput) {
-                    $("#"+fileinput.uploadFileAttr+"_isDelete").val("false");
-                },
+                initialPreview:initialPreview,
+                initialPreviewConfig:initialPreviewConfig,
                 showUpload:false,
-                //initialPreview:initialPreview,
                 initialPreviewAsData: true,
-                previewFileType: "image",
-                browseClass: "btn btn-success",
-                browseLabel:el.button0?el.button0:"Pick Image",
-                browseIcon: "<i class=\"glyphicon glyphicon-picture\"></i> ",
-                removeClass: "btn btn-danger",
-                removeLabel: "Delete",
-                removeIcon: "<i class=\"glyphicon glyphicon-trash\"></i> ",
-                uploadClass: "btn btn-info",
-                uploadLabel: "Upload",
-                uploadIcon: "<i class=\"glyphicon glyphicon-upload\"></i> "
+                language: 'zh-TW', //设置语言
+                showRemove: false,
+            }).on('fileselect', function(event, numFiles, label) {
+                $("#" + $(this).attr("id") + "_remove").attr("value","");
+            }).on('fileselectnone', function(event) {
+                $("#" + $(this).attr("id") + "_remove").attr("value","true");
             });
 
+        }
+        this.setRows = function(){};
+        this.render = function (el) {
+            var html =
+                '<input id="' + el.id + '_remove" name="' +  el.name + '_remove" type="hidden" value="false" >' +
+                '<input id="' + el.id + '" name="' +  el.name + '" type="file" '+el.multiple+' '+ el.disabledTxt + ' >';
+            el.loadForm.writeOuterFrame(el, html);
+            this.initFileinput(el);
         };
         this.setValue = function (el) {
             var src = el.getValue();
@@ -850,14 +858,11 @@ function loadForm(form,data) {
                         // key: 3,
                         downloadUrl: src, // override url
                         filename: filetype // override download filename
-                    }]
+                    }];
+                    $("#" + el.id ).fileinput('destroy');
+                    this.initFileinput(el,initialPreview,initialPreviewConfig);
                 }
             }
-            $("#" + el.id ).fileinput("refresh",{
-                initialPreview:initialPreview,
-                initialPreviewConfig:initialPreviewConfig
-            });
-
         };
         return this;
     };
@@ -881,27 +886,26 @@ function loadForm(form,data) {
                         "<div class=\'input-group {class}\'>\n" +
                         "   {caption}\n" +
                         "   <div class=\'input-group-btn\ input-group-prepend'>\n" +
-                        " <button type=\"button\" id=\"" + el.id + "_remove_button\" style=\"display: " + ( el.showRemove ? "inline":"none" ) + "\" tabindex=\"500\" onclick=\"clearCropper('" + el.id + "')\" class=\"btn btn-danger\"><i class=\"glyphicon glyphicon-trash\"></i>&nbsp;<span class=\"hidden-xs\">Delete</span></button>" +
+                        " <button type=\"button\" id=\"" + el.id + "_remove_button\" style=\"display: " + ( el.showRemove ? "inline":"none" ) + "\" tabindex=\"500\" onclick=\"clearCropper('" + el.id + "')\" class=\"btn btn-danger\"><i class=\"glyphicon glyphicon-trash\"></i>&nbsp;<span class=\"hidden-xs\">"+( el.button0 ? el.button0:"移除" )+"</span></button>" +
                         "       {remove}\n" +
                         "       {upload}\n" +
                         "       {browse}\n" +
                         "   </div>\n" +
                         "</div>"
                 },
-                language: 'zh', //设置语言
-                maxFileSize: 10240,//文件最大容量
+                language: 'zh-TW', //设置语言
                 uploadExtraData: function (previewId, index) {
 
                 },//上传时除了文件以外的其他额外数据
                 showPreview: false,//隐藏预览
-                uploadAsync: true,//ajax同步
-                dropZoneEnabled: true,//是否显示拖拽区域
-                allowedFileExtensions: ['jpg','png'],//接收的文件后缀
                 showUpload: false, //是否显示上传按钮
                 showRemove: false,
                 showCaption: true,//是否显示标题
-                browseClass: "btn btn-primary", //按钮样式
-                previewFileIcon: "<i class='glyphicon glyphicon-king'></i>",
+            }).on('fileselect', function(event, numFiles, label) {
+                $("#" + $(this).attr("id") + "_remove").attr("value","");
+            }).on('fileselectnone', function(event) {
+                $("#" + $(this).attr("id") + "_remove").attr("value","true");
+                clearCropper($(this).attr("id"));
             });
 
             var image = document.getElementById(el.id+"_img");
@@ -958,7 +962,6 @@ function loadForm(form,data) {
                     var reader = new FileReader();
                     reader.readAsDataURL(input[0].files[0]);
                     reader.onload = function (e) {
-                        $("#" + this.id + "_remove").attr("value","");
                         img.removeAttr('src');
                         img.attr('src', e.target.result);
                         if( this.cropper ){
@@ -1152,6 +1155,11 @@ function loadForm(form,data) {
     this.renderAll();
     this.initializedForm();
     return this;
+}
+
+function clearFileinput(id) {
+    $("#" + id).fileinput('clear');
+    $("#" + id + "_remove").attr("value","true");
 }
 
 function clearCropper(id) {

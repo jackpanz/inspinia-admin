@@ -181,3 +181,7 @@ update time 2019-03-07
 v 1.0.18
 update time 2019-03-31
 1.添加cropper标签的showRemove事件,按照ID_remove提交删除请求字段
+
+v 1.0.19
+update time 2019-03-31
+1.添加fileinput标签的showRemove事件,按照ID_remove提交删除请求字段

@@ -11,7 +11,7 @@
     <name>inspinia-admin</name>
     <groupId>com.github.jackpanz</groupId>
     <artifactId>inspinia-admin</artifactId>
-    <version>1.0.18</version>
+    <version>1.0.19</version>
     <packaging>jar</packaging>
 
     <developers>
