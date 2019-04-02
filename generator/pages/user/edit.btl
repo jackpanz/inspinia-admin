@@ -1,0 +1,134 @@
+@layout("/templates/cms-list.btl",{title:'編輯用户基本信息表'}){
+
+<div class="wrapper wrapper-content animated fadeInRight">
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-content">
+
+                    <div class="row">
+
+                        <form id="ff" action="" method="post" enctype="multipart/form-data">
+
+                        </form>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    $(function (){
+        $("#ff").loadForm({
+            action: "${ctxPath}/user/save",
+            elements: [
+                {name: 'id', type: 'hidden',},
+                {
+                    title: "name",
+                    name: 'name',
+                    type: 'text',
+                    layoutClass: 'col-sm-8 col-sm-offset-2',
+                },
+                {
+                    title: "gender",
+                    name: 'gender',
+                    type: 'text',
+                    layoutClass: 'col-sm-8 col-sm-offset-2',
+                },
+                {
+                    title: "dial_code",
+                    name: 'dial_code',
+                    type: 'text',
+                    layoutClass: 'col-sm-8 col-sm-offset-2',
+                },
+                {
+                    title: "mobile",
+                    name: 'mobile',
+                    type: 'text',
+                    layoutClass: 'col-sm-8 col-sm-offset-2',
+                },
+                {
+                    title: "password",
+                    name: 'password',
+                    type: 'text',
+                    layoutClass: 'col-sm-8 col-sm-offset-2',
+                },
+                {
+                    title: "icon",
+                    name: 'icon',
+                    type: 'text',
+                    layoutClass: 'col-sm-8 col-sm-offset-2',
+                },
+                {
+                    title: "province_id",
+                    name: 'province_id',
+                    type: 'text',
+                    layoutClass: 'col-sm-8 col-sm-offset-2',
+                },
+                {
+                    title: "city_id",
+                    name: 'city_id',
+                    type: 'text',
+                    layoutClass: 'col-sm-8 col-sm-offset-2',
+                },
+                {
+                    title: "height",
+                    name: 'height',
+                    type: 'text',
+                    layoutClass: 'col-sm-8 col-sm-offset-2',
+                },
+                {
+                    title: "profession",
+                    name: 'profession',
+                    type: 'text',
+                    layoutClass: 'col-sm-8 col-sm-offset-2',
+                },
+                {
+                    title: "emotion",
+                    name: 'emotion',
+                    type: 'text',
+                    layoutClass: 'col-sm-8 col-sm-offset-2',
+                },
+                {
+                    title: "weight",
+                    name: 'weight',
+                    type: 'text',
+                    layoutClass: 'col-sm-8 col-sm-offset-2',
+                },
+                {
+                    title: "introduction",
+                    name: 'introduction',
+                    type: 'text',
+                    layoutClass: 'col-sm-8 col-sm-offset-2',
+                },
+                {
+                    layoutClass: 'col-sm-12 col-sm-offset-5', render: function (el, value, result, rows) {
+                        el.innerHTML = '<div class="form-group"><a class="btn btn-success" onclick="$(\'#ff\').submit();" type="button" >保存</a></div>';
+                    }
+                }
+            ], success: function (result) {
+                if (result.action) {
+                    $.alert("保存成功", "${ctxPath}/user/list");
+                } else {
+                    $.alert(result.msg,2);
+                }
+            }
+        });
+
+        $.ajaxObject(
+            "${parameter.id==null?'':ctxPath+'/user/get?id='+parameter.id}",
+            function (user) {
+                if(user){
+                    $("#ff").loadForm().setValues(user);
+                }
+                $("#ff").loadForm().refresh();
+            }
+        );
+    });
+</script>
+@}

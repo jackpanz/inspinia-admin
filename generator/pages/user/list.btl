@@ -1,0 +1,88 @@
+@layout("/templates/cms-list.btl",{title:'用户基本信息表列表'}){
+<div class="wrapper wrapper-content animated fadeInRight">
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title" style="margin-bottom: 0px">
+                    <div class="row" id="searchRow" style="position: relative;">
+                        <div class="col-sm-2">
+                            <a href="${ctxPath}/user/edit" class="btn btn-sm btn-primary">添加</a>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="ibox-content" style="padding-bottom: 10px;padding-top: 0px">
+                    <div class="table-responsive">
+                        <table width="100%" class="table table-striped dataTables-example table-hover">
+
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+
+    $(function (){
+
+        dataTable({
+            tag: ".dataTables-example",
+            ajax: {url: "${ctxPath}/user/page"},
+            columns: [
+                {data: "id", sStyle: "center",title: 'id'},
+                {data: "name", sStyle: "center",title: 'name'},
+                {data: "gender", sStyle: "center",title: 'gender'},
+                {data: "dial_code", sStyle: "center",title: 'dial_code'},
+                {data: "mobile", sStyle: "center",title: 'mobile'},
+                {data: "password", sStyle: "center",title: 'password'},
+                {data: "icon", sStyle: "center",title: 'icon'},
+                {data: "province_id", sStyle: "center",title: 'province_id'},
+                {data: "city_id", sStyle: "center",title: 'city_id'},
+                {data: "height", sStyle: "center",title: 'height'},
+                {data: "profession", sStyle: "center",title: 'profession'},
+                {data: "emotion", sStyle: "center",title: 'emotion'},
+                {data: "weight", sStyle: "center",title: 'weight'},
+                {data: "introduction", sStyle: "center",title: 'introduction'},
+                {
+                    data: "id", title: '操作', render: function (value, type, row, meta) {
+                        return '<a style="" class="btn btn-sm btn-info" href="${ctxPath}/user/edit?id=' + value + '" >編輯</a>'
+                            + '&nbsp;&nbsp;<button onclick="del(' + value + ');" style="" class="btn btn-sm btn-danger">刪除</button>';
+                    }
+                }
+            ],
+            columnDefs: [
+                //最后一列为 x px
+                { targets: [-1], width: "200px" },
+            ],
+            searchTag: {
+                tag: "#searchRow",
+                //rows: [
+                //    {title: "title1",name: "name1",},
+                //    {title: "title2",name: "name2",type:"select",nameKey:"name_tw",valueKey:"id",rows:[],},
+                //]
+            },
+        });
+
+    });
+
+    var del = function (id) {
+        $.confirm("確認刪除?", function () {
+            $.ajax({
+                url: '${ctxPath}/user/delete?id=' + id,
+                type: 'post',
+                dataType: 'json',
+                success: function (data) {
+                    data.action  ? tableReload('.dataTables-example') : $.alert(data.msg);
+                }
+            });
+        });
+    }
+</script>
+
+@}
+

@@ -1,0 +1,32 @@
+server:
+  port: 8080
+
+spring:
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+
+  # 驱动配置信息
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    driverClassName: com.mysql.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/demo_db
+    username: root
+    password: root
+    hikari:
+      auto-commit: true
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+      maximum-pool-size: 10
+
+#mybatis-plus
+mybatis-plus:
+  mapper-locations: classpath:com/test/mapper/*.xml
+  #这里是实体类的位置
+  typeAliasesPackage: com.test.entity
+  configuration:
+    #####驼峰下划线转换（ 属性用驼峰命名时候,TableField指定不存在时候,才会触发自动转换sql字段 ）
+    map-underscore-to-camel-case: false
+    cache-enabled: false
+    log-prefix: sql.
