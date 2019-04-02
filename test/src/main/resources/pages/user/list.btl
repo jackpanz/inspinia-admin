@@ -1,4 +1,4 @@
-@layout("/templates/cms-list.btl",{title:'用户基本信息表列表'}){
+@layout("/templates/cms-list.btl",{title:'用户列表'}){
 <div class="wrapper wrapper-content animated fadeInRight">
 
     <div class="row">
@@ -28,26 +28,19 @@
 
 <script>
 
-    $(function (){
+    $(function () {
 
         dataTable({
             tag: ".dataTables-example",
             ajax: {url: "${ctxPath}/user/page"},
             columns: [
-                {data: "id", sStyle: "center",title: 'id'},
-                {data: "name", sStyle: "center",title: 'name'},
-                {data: "gender", sStyle: "center",title: 'gender'},
-                {data: "dial_code", sStyle: "center",title: 'dial_code'},
-                {data: "mobile", sStyle: "center",title: 'mobile'},
-                {data: "password", sStyle: "center",title: 'password'},
-                {data: "icon", sStyle: "center",title: 'icon'},
-                {data: "province_id", sStyle: "center",title: 'province_id'},
-                {data: "city_id", sStyle: "center",title: 'city_id'},
-                {data: "height", sStyle: "center",title: 'height'},
-                {data: "profession", sStyle: "center",title: 'profession'},
-                {data: "emotion", sStyle: "center",title: 'emotion'},
-                {data: "weight", sStyle: "center",title: 'weight'},
-                {data: "introduction", sStyle: "center",title: 'introduction'},
+                {data: "id", sStyle: "center", title: 'id'},
+                {data: "name", sStyle: "center", title: '名字'},
+                {data: "gender", sStyle: "center", title: '性別'},
+                {data: "dial_code", sStyle: "center", title: '區號'},
+                {data: "mobile", sStyle: "center", title: '電話'},
+                {data: "image", sStyle: "center", title: '圖片', render: urlFormat },
+                {data: "height", sStyle: "center", title: '身高'},
                 {
                     data: "id", title: '操作', render: function (value, type, row, meta) {
                         return '<a style="" class="btn btn-sm btn-info" href="${ctxPath}/user/edit?id=' + value + '" >編輯</a>'
@@ -57,7 +50,7 @@
             ],
             columnDefs: [
                 //最后一列为 x px
-                { targets: [-1], width: "200px" },
+                {targets: [-1], width: "200px"},
             ],
             searchTag: {
                 tag: "#searchRow",
@@ -77,10 +70,15 @@
                 type: 'post',
                 dataType: 'json',
                 success: function (data) {
-                    data.action  ? tableReload('.dataTables-example') : $.alert(data.msg);
+                    data.action ? tableReload('.dataTables-example') : $.alert(data.msg);
                 }
             });
         });
+    }
+
+    function urlFormat(value, row, index) {
+        return $.isBlank(value) ? '<div style="width: 50px;height: 50px" ></div>'
+            : "<a target=\"_blank\" href=\"" + value + "\" ><div src=\"" + value + "\" style=\"display:inline-block;background: url(" + value + ") no-repeat left 50%;background-size:100%;width: 50px;height: 50px\"></div></a>";
     }
 </script>
 

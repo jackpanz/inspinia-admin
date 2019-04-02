@@ -1,0 +1,40 @@
+<nav class="navbar-default navbar-static-side" role="navigation">
+    <div class="sidebar-collapse">
+        <ul class="nav metismenu" id="side-menu">
+            <li class="nav-header" style="padding: 18px 25px;">
+                <div class="dropdown profile-element" style="text-align: center;">
+                    <span><a href="${ctxPath}/admin/index" ><img alt="image" class="img-circle" src="${ctxPath}/assets/images/default_avatar_male.jpg" width="68"
+                                  height="68"/></a></span>
+                    <a data-toggle1="dropdown" class="dropdown-toggle" href="${ctxPath}/admin/index">
+                            <span class="clear">
+                                <span class="block m-t-xs"><strong class="font-bold">語言推廣中心</strong></span>
+                                <span class="text-muted text-xs block"
+                                      style="font-size: 20px">
+                                    <!--<b class="caret"></b>-->
+                                </span>
+                            </span>
+                    </a>
+                    <!--<ul class="dropdown-menu animated fadeInRight m-t-xs">-->
+                    <!--<li><a href="profile.html">Profile</a></li>-->
+                    <!--<li><a href="contacts.html">Contacts</a></li>-->
+                    <!--<li><a href="mailbox.html">Mailbox</a></li>-->
+                    <!--<li class="divider"></li>-->
+                    <!--<li><a href="login.html">Logout</a></li>-->
+                    <!--</ul>-->
+                </div>
+                <div class="logo-element">
+                    <a href="${ctxPath}/admin/index" style="margin-left: -10px">Test</a>
+                </div>
+            </li>
+
+            <li>
+                <a class="menu_a" href="${ctxPath}/user/list" id="c_6_1">
+                    <i class="menu-icon fa fa-list"></i>
+                    <span class="menu-text">用戶管理</span>
+                </a>
+                <b class="arrow"></b>
+            </li>
+
+        </ul>
+    </div>
+</nav>

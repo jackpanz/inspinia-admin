@@ -261,12 +261,8 @@ function loadForm(form,data) {
 
     $.data( form , "loadForm", this );
 
-    this.setRows = function (name,rows) {
-        this.elementMap[name].rows = rows;
-        return this;
-    };
-
     this.refresh = function(name){
+        /*
         console.log("_refresh=" + (name?name:"all"));
         if( name ){
             var el = this.elementMap[name];
@@ -281,15 +277,29 @@ function loadForm(form,data) {
             }.bind(this));
         }
         return this;
+        */
+    };
+
+    this.setRows = function (name,rows) {
+        this.elementMap[name].rows = rows;
+        this.setElementRows(el);
+        return this;
     };
 
     this.setValues = function () {
         if( arguments.length == 1 ){
             this.values = arguments[0];
+            $.each(this.data.elements, function (i, el) {
+                if( !name || ( name && name == el.name) ){
+                    //this.setElementRows(el);
+                    this.setElementValue(el);
+                }
+            }.bind(this));
         } else if(arguments.length == 2) {
             var name = arguments[0]
             var value = arguments[1];
             this.elementMap[name].setValue(value);
+            this.setElementValue(el);
         }
         return this;
     };
@@ -345,7 +355,9 @@ function loadForm(form,data) {
                 height: null,
                 disabled: false,
                 readonly: false,
-                showRemove: false,
+                showRemove: false,          //fileinput
+                maxFileSize:0,              //fileinput
+                allowedFileTypes:null,      //fileinput ["image","html","text","office","gdocs","video","audio","flash","object","pdf","other"]
                 aspectRatio:1,
                 disabledTxt: el.disabled ?'disabled':'',
                 readonlyTxt: el.readonly ?'readonly':'',
@@ -461,9 +473,9 @@ function loadForm(form,data) {
         var layoutClass = el.layoutClass || el.loadForm.data.layoutClass || "col-sm-12" ;
 
         if ("html" != el.type) {
-            frame ='<div style="margin-bottom: 5px" id="' + el.uid + '" class="' + layoutClass + '"><div class="form-group"><label style="' + el.titleStyle + '" >' + el.title + '</label>' + html + '<label class="error" style="display:none;position:absolute" for="' + el.id + '" /></div></div>';
+            frame ='<div id="' + el.uid + '" class="layout-class ' + layoutClass + '"><div class="form-group"><label style="' + el.titleStyle + '" >' + el.title + '</label>' + html + '<label class="error" style="display:none;position:absolute" for="' + el.id + '" /></div></div>';
         } else {
-            frame = '<div style="margin-bottom: 5px" id="' + el.uid + '" class="' + layoutClass + '">' + html + '</div>';
+            frame = '<div id="' + el.uid + '" class="layout-class ' + layoutClass + '">' + html + '</div>';
         }
         this.jform.append(frame);
     }
@@ -800,11 +812,54 @@ function loadForm(form,data) {
         return this;
     };
 
-
-    var audioType = /(ogg|mp3|mp?g|wav)$/i;
-    var videoType = /(ogg|mp4|mp?g|mov|webm|3gp)$/i;
-    var imageType = /\.(gif|png|jpe?g)$/i;
-
+    var fileTypes = [
+        {
+            name: "image",
+            filetype: "image/",
+            reg: /\.(gif|png|jpe?g)$/i
+        },
+        /*
+        {   name: "html",
+            contentType: "text/html",
+            reg: /\.(htm|html)$/i
+        },
+        {
+            name: "office",
+            filetype: "application/",
+            reg: /\.(docx?|xlsx?|pptx?|pps|potx?)$/i},
+        {
+            name: "gdocs",
+            filetype: "application/",
+            reg: /\.(docx?|xlsx?|pptx?|pps|potx?|rtf|ods|odt|pages|ai|dxf|ttf|tiff?|wmf|e?ps)$/i
+        },
+        {
+            name: "text",
+            // filetype: "text/",
+            contentType: "text/plain",
+            reg: /\.(txt|md|csv|nfo|ini|json|php|js|css)$/i
+        },
+         */
+        {
+            name: "video",
+            filetype: "video/",
+            reg: /\.(og?|mp4|webm|mp?g|mov|3gp)$/i
+        },
+        {
+            name: "audio",
+            filetype: "audio/",
+            reg: /\.(og?|mp3|mp?g|wav)$/i
+        },
+        {
+            name: "flash",
+            contentType: "application/x-shockwave-flash",
+            reg: /\.(swf)$/i
+        },
+        {
+            name: "pdf",
+            contentType: "application/pdf",
+            reg: /\.(pdf)$/i
+        },
+    ];
 
     //file
     var _filephoto = function () {
@@ -829,6 +884,8 @@ function loadForm(form,data) {
                 initialPreviewAsData: true,
                 language: 'zh-TW', //设置语言
                 showRemove: false,
+                maxFileSize:el.maxFileSize,
+                allowedFileTypes: el.allowedFileTypes,
             }).on('fileselect', function(event, numFiles, label) {
                 $("#" + $(this).attr("id") + "_remove").attr("value","");
             }).on('fileselectnone', function(event) {
@@ -847,25 +904,28 @@ function loadForm(form,data) {
         this.setValue = function (el) {
             var src = el.getValue();
             var initialPreview;
-            var initialPreviewConfig;
+            var initialPreviewConfig = null;
             if( src && src != "" ){
                 initialPreview = [src];
-                var filetype = src.replace(/^.+\./,'').toLowerCase();
-                if( src.match(audioType) ){
+                var suffix = src.replace(/^.+\./,'').toLowerCase();
+                var name = src.replace(/(.*\/)*([^.]+).*/ig, "$2") + "." + suffix;
+                for (var i = 0; i < fileTypes.length; i++) {
+                    var fileType = fileTypes[i];
+                    if (src.match(fileType.reg)) {
+                        initialPreviewConfig = [{
+                            type: fileType.name,
+                            size: 0,
+                            filetype: fileType.contentType ? fileType.contentType : fileType.filetype + suffix ,
+                            caption: name,
+                            filename: name,
+                            downloadUrl: src,
+                        }];
+                        break;
+                    }
+                }
+                if( initialPreviewConfig == null ){
                     initialPreviewConfig = [{
-                        type: "audio", size: 0, filetype: "audio/"+filetype, caption: filetype, filename: filetype , downloadUrl:true
-                    }];
-                } else if( src.match(videoType) ){
-                    initialPreviewConfig = [{
-                        type: "video", size: 0, filetype: "video/"+filetype, caption: filetype, filename: filetype ,downloadUrl:true
-                    }];
-                } else if( src.match(imageType) ){
-                    initialPreviewConfig = [{
-                        type: "image", size: 0, caption: filetype, filename: filetype , downloadUrl:true
-                    }];
-                } else {
-                    initialPreviewConfig = [{
-                        type: "other", size: 0, caption: filetype, filename: filetype , downloadUrl:true
+                        type: "other", size: 0, caption: name, filename: name , downloadUrl:src
                     }];
                 }
                 $("#" + el.id ).fileinput('destroy');
@@ -909,6 +969,8 @@ function loadForm(form,data) {
                 showUpload: false, //是否显示上传按钮
                 showRemove: false,
                 showCaption: true,//是否显示标题
+                maxFileSize:el.maxFileSize,
+                allowedFileTypes: ["image"],
             }).on('fileselect', function(event, numFiles, label) {
                 $("#" + $(this).attr("id") + "_remove").attr("value","");
             }).on('fileselectnone', function(event) {

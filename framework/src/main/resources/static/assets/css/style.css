@@ -9167,6 +9167,10 @@ nav.page-tabs .page-tabs-content {
     }
 }
 
+.layout-class{
+    min-height: 75px;
+}
+
 /* form 表单占用一半 end */
 
 

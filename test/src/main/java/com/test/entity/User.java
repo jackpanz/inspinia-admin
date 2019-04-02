@@ -1,6 +1,7 @@
 package com.test.entity;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
+import java.util.Date;
 import com.baomidou.mybatisplus.annotation.Version;
 import com.baomidou.mybatisplus.annotation.TableId;
 import java.io.Serializable;
@@ -37,6 +38,16 @@ public class User implements Serializable {
     private Integer gender;
 
     /**
+     * 地址
+     */
+    private String address;
+
+    /**
+     * 出生日期
+     */
+    private Date date_of_birth;
+
+    /**
      * 区号
      */
     private String dial_code;
@@ -47,24 +58,14 @@ public class User implements Serializable {
     private String mobile;
 
     /**
-     * 登录密码
-     */
-    private String password;
-
-    /**
      * 头像
      */
     private String icon;
 
     /**
-     * 省份
+     * 全身相片
      */
-    private Integer province_id;
-
-    /**
-     * 城市
-     */
-    private Integer city_id;
+    private String image;
 
     /**
      * 身高
@@ -75,16 +76,6 @@ public class User implements Serializable {
      * 職業
      */
     private String profession;
-
-    /**
-     * 情感狀況
-     */
-    private String emotion;
-
-    /**
-     * 体重
-     */
-    private Integer weight;
 
     /**
      * 个人介绍

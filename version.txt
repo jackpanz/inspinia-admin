@@ -182,3 +182,9 @@ v 1.0.20
 update time 2019-03-31
 1.添加cropper标签的showRemove事件,按照ID_remove提交删除请求字段。
 2.添加fileinput标签的showRemove事件,按照ID_remove提交删除请求字段。
+
+v 1.0.21
+update time 2019-04-02
+1.添加fileinput flash pdf 視圖
+2.filephoto,cropper 添加allowedFileTypes,maxFileSize參數
+3.刪除refresh方法，setRows和setValues即使生效，不需要再調用refresh。

@@ -7,26 +7,24 @@
         <id column="id" property="id" />
         <result column="name" property="name" />
         <result column="gender" property="gender" />
+        <result column="address" property="address" />
+        <result column="date_of_birth" property="date_of_birth" />
         <result column="dial_code" property="dial_code" />
         <result column="mobile" property="mobile" />
-        <result column="password" property="password" />
         <result column="icon" property="icon" />
-        <result column="province_id" property="province_id" />
-        <result column="city_id" property="city_id" />
+        <result column="image" property="image" />
         <result column="height" property="height" />
         <result column="profession" property="profession" />
-        <result column="emotion" property="emotion" />
-        <result column="weight" property="weight" />
         <result column="introduction" property="introduction" />
     </resultMap>
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, name, gender, dial_code, mobile, password, icon, province_id, city_id, height, profession, emotion, weight, introduction
+        id, name, gender, address, date_of_birth, dial_code, mobile, icon, image, height, profession, introduction
     </sql>
 
 
     <sql id="Base_Alias_Column_List">
-        user.id as user_id,user.name as user_name,user.gender as user_gender,user.dial_code as user_dial_code,user.mobile as user_mobile,user.password as user_password,user.icon as user_icon,user.province_id as user_province_id,user.city_id as user_city_id,user.height as user_height,user.profession as user_profession,user.emotion as user_emotion,user.weight as user_weight,user.introduction as user_introduction
+        user.id as user_id,user.name as user_name,user.gender as user_gender,user.address as user_address,user.date_of_birth as user_date_of_birth,user.dial_code as user_dial_code,user.mobile as user_mobile,user.icon as user_icon,user.image as user_image,user.height as user_height,user.profession as user_profession,user.introduction as user_introduction
     </sql>
 
     <resultMap id="selectSimpleResultMap" type="java.util.HashMap">

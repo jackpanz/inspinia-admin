@@ -29,81 +29,96 @@
             elements: [
                 {name: 'id', type: 'hidden',},
                 {
-                    title: "name",
+                    title: "名字",
                     name: 'name',
                     type: 'text',
                     layoutClass: 'col-sm-8 col-sm-offset-2',
+                    validate: {required: true}
                 },
                 {
-                    title: "gender",
+                    title: "圖片",
+                    name: 'image',
+                    type: 'cropper',
+                    layoutClass: 'col-sm-8 col-sm-offset-2',
+                    maxFileSize:10240,
+                    showRemove:true,
+                },
+                {
+                    title: "圖片",
+                    name: 'icon',
+                    type: 'filephoto',
+                    layoutClass: 'col-sm-8 col-sm-offset-2',
+                    maxFileSize:10240,
+                    showRemove:true,
+                },
+                {
+                    title: "性別",
                     name: 'gender',
-                    type: 'text',
-                    layoutClass: 'col-sm-8 col-sm-offset-2',
+                    type: 'radio',
+                    layoutClass: 'col-sm-4 col-sm-offset-2',
+                    rows: [
+                        {id: 1, title: "男"},
+                        {id: 0, title: "女"},
+                    ],
+                    defaultValue:1,
                 },
                 {
-                    title: "dial_code",
+                    title: "專業",
+                    name: 'profession',
+                    type: 'select2',
+                    layoutClass: 'col-sm-4',
+                    rows: [
+                        {id: 0, title: "哲学"},
+                        {id: 0, title: "经济"},
+                        {id: 0, title: "法学"},
+                        {id: 0, title: "文学"},
+                        {id: 0, title: "医学"},
+                    ],
+                    validate: {required: true}
+                },
+                {
+                    title: "區號",
                     name: 'dial_code',
-                    type: 'text',
-                    layoutClass: 'col-sm-8 col-sm-offset-2',
+                    type: 'radio',
+                    layoutClass: 'col-sm-4 col-sm-offset-2',
+                    rows: [
+                        {id: 86, title: "86"},
+                        {id: 852, title: "852"},
+                    ],
+                    validate: {required: true}
                 },
                 {
                     title: "mobile",
                     name: 'mobile',
                     type: 'text',
-                    layoutClass: 'col-sm-8 col-sm-offset-2',
+                    layoutClass: 'col-sm-4',
                 },
                 {
-                    title: "password",
-                    name: 'password',
-                    type: 'text',
-                    layoutClass: 'col-sm-8 col-sm-offset-2',
+                    title: "出生日期",
+                    name: 'date_of_birth',
+                    type: 'date',
+                    format:'yyyy-MM-dd',
+                    layoutClass: 'col-sm-4 col-sm-offset-2',
+                    validate: {required: true}
                 },
                 {
-                    title: "icon",
-                    name: 'icon',
-                    type: 'text',
-                    layoutClass: 'col-sm-8 col-sm-offset-2',
-                },
-                {
-                    title: "province_id",
-                    name: 'province_id',
-                    type: 'text',
-                    layoutClass: 'col-sm-8 col-sm-offset-2',
-                },
-                {
-                    title: "city_id",
-                    name: 'city_id',
-                    type: 'text',
-                    layoutClass: 'col-sm-8 col-sm-offset-2',
-                },
-                {
-                    title: "height",
+                    title: "身高",
                     name: 'height',
                     type: 'text',
-                    layoutClass: 'col-sm-8 col-sm-offset-2',
+                    layoutClass: 'col-sm-4',
                 },
                 {
-                    title: "profession",
-                    name: 'profession',
-                    type: 'text',
+                    title: "地址",
+                    name: 'address',
+                    type: 'textarea',
                     layoutClass: 'col-sm-8 col-sm-offset-2',
+                    height:300,
                 },
                 {
-                    title: "emotion",
-                    name: 'emotion',
-                    type: 'text',
-                    layoutClass: 'col-sm-8 col-sm-offset-2',
-                },
-                {
-                    title: "weight",
-                    name: 'weight',
-                    type: 'text',
-                    layoutClass: 'col-sm-8 col-sm-offset-2',
-                },
-                {
-                    title: "introduction",
+                    title: "描述",
                     name: 'introduction',
-                    type: 'text',
+                    type: 'ueditor',
+                    height:300,
                     layoutClass: 'col-sm-8 col-sm-offset-2',
                 },
                 {
@@ -125,7 +140,6 @@
             function (user) {
                 if(user){
                     $("#ff").loadForm().setValues(user);
-                    $("#ff").loadForm().refresh();
                 }
             }
         );

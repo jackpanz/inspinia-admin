@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Access-Control-Allow-Origin" content="*">
+    <link rel="icon" href="${ctxPath}/favicon.ico" type="image/x-icon" />
+    <title>${title!"CMS"}</title>
+
+    <link rel="stylesheet" type="text/css" href="${ctxPath}/assets/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="${ctxPath}/assets/css/font-awesome.css">
+    <link rel="stylesheet" type="text/css" href="${ctxPath}/assets/css/animate.css">
+    <link rel="stylesheet" type="text/css" href="${ctxPath}/assets/css/style.css" rel="stylesheet">
+
+
+    <!-- ui -->
+    <link rel="stylesheet" type="text/css" href="${ctxPath}/assets/js/dataTables/datatables.min.css">
+    <link rel="stylesheet" type="text/css" href="${ctxPath}/assets/css/select2.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="${ctxPath}/assets/css/select2-bootstrap.css">
+
+    <link rel="stylesheet" type="text/css" href="${ctxPath}/assets/js/bootstrap-fileinput/bootstrap-fileinput-5.0.1/css/fileinput.min.css" media="all" />
+    <!-- ui -->
+
+    <link rel="stylesheet" type="text/css" href="${ctxPath}/assets/js/cropper/cropper.css" rel="stylesheet">
+
+    <script type="text/javascript" charset="UTF-8" src="${ctxPath}/assets/js/jquery-3.1.1.min.js"></script>
+
+    <script type="text/javascript" charset="UTF-8" src="${ctxPath}/assets/js/layer/layer.js"></script>
+    <script type="text/javascript" charset="UTF-8" src="${ctxPath}/assets/js/laydate/laydate.js"></script>
+
+    <style>
+        /** {*/
+        /*font-family: "Microsoft YaHei", Helvetica, Arial, sans-serif;*/
+        /*}*/
+    </style>
+
+</head>
+
+<body>
+
+<div id="wrapper">
+
+    @include("/templates/cms-menu.btl"){}
+
+    <div id="page-wrapper" class="gray-bg">
+        <input type="hidden" value="${session.isOpenPushInfo!}" id="isOpenPushInfo">
+        @include("/templates/cms-top.btl"){}
+
+        <div class="row content-tabs">
+            <button class="roll-nav roll-left J_tabLeft" onclick="javascript:history.go(-1);"><i class="fa fa-backward"></i>
+            </button>
+            <nav class="page-tabs J_menuTabs">
+                <div class="page-tabs-content" style="margin-left: 0px;">
+                    <a href="javascript:;" class="active J_menuTab" data-id="index_v1.html">${title}</a>
+                    <!--<a href="javascript:;" class="J_menuTab" data-id="graph_echarts.html">百度ECharts <i
+                            class="fa fa-times-circle"></i></a>
+                    <a href="javascript:;" class="J_menuTab" data-id="graph_echarts.html">百度ECharts <iclass="fa fa-times-circle"></i></a>
+                    <a href="javascript:;" class="active J_menuTab" data-id="graph_echarts.html">百度ECharts <i
+                            class="fa fa-times-circle"></i></a>-->
+                </div>
+            </nav>
+            <button class="roll-nav roll-right J_tabExit" onclick="javascript:history.go(1);"><i class="fa fa-forward"></i>
+            </button>
+            <!--<div class="btn-group roll-nav roll-right">
+                <button class="dropdown J_tabClose" data-toggle="dropdown">关闭操作<span class="caret"></span>
+
+                </button>
+                <ul role="menu" class="dropdown-menu dropdown-menu-right">
+                    <li class="J_tabShowActive">
+                        <a>定位当前选项卡</a>
+                    </li>
+                    <li class="divider"></li>
+                    <li class="J_tabCloseAll">
+                        <a>关闭全部选项卡</a>
+                    </li>
+                    <li class="J_tabCloseOther">
+                        <a>关闭其他选项卡</a>
+                    </li>
+                </ul>
+            </div>
+            <a href="login.html" class="roll-nav roll-right J_tabExit"><i class="fa fa fa-sign-out"></i> 退出</a>-->
+        </div>
+
+        ${layoutContent}
+
+        <div class="footer">
+            <div class="pull-right">
+                <!--10GB of <strong>250GB</strong> Free.-->
+            </div>
+            <div>
+                <!--<strong>MacCloud</strong> Techologies Limited-->
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!--<script type="text/javascript" charset="UTF-8" src="/assets/js/jquery-2.1.4.js"></script>-->
+
+<script type="text/javascript" charset="UTF-8" src="${ctxPath}/assets/js/bootstrap.min.js"></script>
+
+<!-- ui -->
+<script type="text/javascript" charset="UTF-8" src="${ctxPath}/assets/js/dataTables/datatables.min.js"></script>
+<script type="text/javascript" charset="UTF-8" src="${ctxPath}/assets/js/jquery.metisMenu.js"></script>
+<script type="text/javascript" charset="UTF-8" src="${ctxPath}/assets/js/jquery.slimscroll.js"></script>
+<script type="text/javascript" charset="UTF-8" src="${ctxPath}/assets/js/pace.js"></script>
+<script type="text/javascript" charset="UTF-8" src="${ctxPath}/assets/js/inspinia.js"></script>
+<script type="text/javascript" charset="UTF-8" src="${ctxPath}/assets/js/jquery.validate.js"></script>
+<script type="text/javascript" charset="UTF-8" src="${ctxPath}/assets/js/jquery.validate.zh.js"></script>
+<script type="text/javascript" charset="UTF-8" src="${ctxPath}/assets/js/jquery.form.min.js"></script>
+
+<script type="text/javascript" charset="UTF-8" src="${ctxPath}/assets/js/bootstrap-fileinput/bootstrap-fileinput-5.0.1/js/fileinput.min.js"></script>
+<script type="text/javascript" charset="UTF-8" src="${ctxPath}/assets/js/bootstrap-fileinput/bootstrap-fileinput-5.0.1/js/locales/zh-TW.js"></script>
+<!--<script type="text/javascript" charset="UTF-8" src="${ctxPath}/assets/js/bootstrap-fileinput/bootstrap-fileinput-5.0.1/js/plugins/sortable.min.js"></script>-->
+<!--<script type="text/javascript" charset="UTF-8" src="${ctxPath}/assets/js/bootstrap-fileinput/bootstrap-fileinput-5.0.1/js/plugins/purify.min.js"></script>-->
+
+<script type="text/javascript" charset="UTF-8" src="${ctxPath}/assets/js/select2.full.min.js"></script>
+
+<script type="text/javascript" charset="utf-8" src="${ctxPath}/assets/ueditor/ueditor.config.js"></script>
+<script type="text/javascript" charset="utf-8" src="${ctxPath}/assets/ueditor/ueditor.all.min.js"></script>
+
+<script type="text/javascript" charset="UTF-8" src="${ctxPath}/assets/js/cropper/cropper.js"></script>
+<!-- ui -->
+
+<!--<script type="text/javascript" charset="UTF-8" src="/assets/js/core.en.js"></script>-->
+<script type="text/javascript" charset="UTF-8" src="${ctxPath}/assets/js/core.js?date=20190331"></script>
+
+<script type="text/javascript" charset="UTF-8" src="${ctxPath}/assets/js/contabs.min.js"></script>
+${js!}
+<script type="text/javascript">
+    jQuery(function () {
+        $(".menu_a").each(function (i, a) {
+            $(a).on("click", function () {
+                var b = $(this).attr("id");
+                sessionStorage.setItem("openLi", b);
+            });
+        });
+        var openLi = sessionStorage.getItem("openLi");
+        if (openLi != null) {
+            var head = openLi.substr(0, 2);
+            if (head == "c_") {
+                $("#" + openLi).parent().addClass("active");
+                $("#" + openLi).parent().parent().addClass("in");
+                $("#" + openLi).parent().parent().parent().addClass("active");
+                sessionStorage.setItem("lastOpen",openLi);
+            }else{
+                var lastOpen=sessionStorage.getItem("lastOpen");
+                $("#" + lastOpen).parent().parent().addClass("in");
+                $("#" + lastOpen).parent().parent().parent().addClass("active");
+                $("#" + lastOpen).parent().addClass("active");
+            }
+        }
+    });
+</script>
+</body>
+</html>
